@@ -71,6 +71,8 @@ server.register([
         register: require('./server/utils/i18n.js')
     }, {
         register: require('./server/controller/index_controller.js')
+    }, {
+        register: require('./server/controller/logistics_order_controller.js')
     }
 ], function () {
     server.start(function() {
