@@ -37,7 +37,7 @@ exports.register = function(server, options, next) {
                     } else {
                         var logistics_orders = content.rows;
                         
-                        if (logistics_orders.length) {
+                        if (logistics_orders.length == 0) {
                             return reply({"success":true,"message":"ok"});
                         }
                         
