@@ -14,7 +14,7 @@
 */
  
 var _ = require('lodash');
-var r = require('request');
+var uu_request = require('../utils/uu_request');
 var moment = require('moment');
 var eventproxy = require('eventproxy');
 
