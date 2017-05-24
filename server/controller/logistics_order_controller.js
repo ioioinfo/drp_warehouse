@@ -59,7 +59,7 @@ exports.register = function(server, options, next) {
                             
                             var rows = [];
                             _.each(logistics_orders,function(logistics_order) {
-                                var row = _.merge(m_ec_order[logistics_order.order_id],logistics_order);
+                                var row = _.merge(logistics_order,m_ec_order[logistics_order.order_id]);
                                 row.product_count = m_ec_order[logistics_order.order_id].details.length;
                                 row.address = row.to_province+row.to_city+row.to_district;
                                 rows.push(row);
