@@ -3,14 +3,64 @@ var ReactDOM = require('react-dom');
 
 var Logo = require('Logo');
 var WrapRightHead = require('WrapRightHead');
-var Left = require('Left');
-var Table = require('Table');
-var PageTab = require('PageTab');
 var WrapBottom = require('WrapBottom');
-var ChangePassword = require('ChangePassword');
+
+var breadcrumbs = ["商品","商品分类"];
+
+
+// 跳转打印页面
+var print_method = function(docStr){
+    var newWindow=window.open("打印窗口","_blank");//打印窗口要换成页面的url
+    newWindow.document.write(docStr);
+    newWindow.document.write("<script>window.onload=window.print();</script>");
+    $(".courier_wrap_print").attr("style","display:none;");
+    $(".alert").attr("style","display:none;");
+    $(".modal-backdrop").attr("style","display:none;");
+    //newWindow.print();
+    //newWindow.close();
+};
+// 过滤快递公司
+var filter_courier = function(items,courier) {
+    var rows = [];
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.logi_name == courier) {
+            rows.push(item);
+
+        }
+    }
+
+    return {"items":rows,"courier":courier,"number":rows.length};
+};
 
 // 框架
 class Wrap extends React.Component {
+    constructor(props) {
+        super(props);
+        // 初始化一个空对象
+        this.state = {thitems:[],tritems:[]};
+    }
+    componentDidMount(){
+        var th = [{sort:"order_id",th:"订单号"}
+                 ,{sort:"address",th:"地址"}
+                 ,{sort:"linkname",th:"订单人"}
+                 ,{sort:"mobile",th:"手机"}
+                 ,{sort:"product_count",th:"数量"}
+                 ,{sort:"logi_name",th:"快递"}];
+
+                 this.setState({thitems:th});
+                 $.ajax({
+                     url: "/list_commit_order",
+                     dataType: 'json',
+                     type: 'GET',
+                     success: function(data) {
+                         this.setState({tritems:data.rows})
+                     }.bind(this),
+                     error: function(xhr, status, err) {
+                     }.bind(this)
+                 });
+
+    }
     render() {
         return (
             <div className="wrap">
@@ -20,141 +70,307 @@ class Wrap extends React.Component {
             <WrapRightHead />
             </div>
             </nav>
-            <div className="container-fluid">
+            <div className="container-fluid margin_top88">
             <div className="row">
-            <Left />
-            <Right />
+            <Left thitems={this.state.thitems} tritems={this.state.tritems}  />
+            <Right tritems={this.state.tritems} />
             </div>
             </div>
-            <ChangePassword/>
+            <JianList tritems={this.state.tritems}/>
+            <Back/>
             </div>
         );
     }
 };
-
 // 右侧下部表格
+class Left extends React.Component {
+
+    render() {
+        return (
+            <div className="wrapLeft col-sm-8">
+                <div className="table-responsive">
+                    <table className="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                        {this.props.thitems.map(item => (
+                            <Th key={item.sort} item = {item}/>))
+                        }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.props.tritems.map(item => (
+                            <Tr key={item.id} item={item} thitems = {this.props.thitems}/>))
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
+};
+// 右侧下部表格th
+class Th extends React.Component {
+    render() {
+        return (
+
+            <th scope="row">{this.props.item.th}</th>
+
+        );
+    }
+};
+// 右侧下部表格tr
+class Tr extends React.Component {
+    render() {
+        return (
+            <tr>
+            {this.props.thitems.map(item => (
+                <td key={item.sort} scope="row" >{this.props.item[item.sort]}</td>))
+            }
+            </tr>
+        );
+    }
+};
+// 右侧操作
 class Right extends React.Component {
     constructor(props) {
         super(props);
-        this.setPage=this.setPage.bind(this);
-        this.handleSort=this.handleSort.bind(this);
-        this.loadData=this.loadData.bind(this);
-        // 初始化一个空对象
-        this.state = {tabthitems:[],tabtritems:[],allNum:0,everyNum:20,thisPage:1,sort:{name:"",dir:""}};
-    }
-    loadData(params1) {
-        var params = {thisPage:this.state.thisPage,sort:this.state.sort};
-        $.extend(params,params1);
-
-        getTableData(params,function(data) {
-            $.extend(data,params1);
-            this.setState(data);
-        }.bind(this));
-    }
-    componentDidMount() {
-        this.loadData({});
-    }
-    setPage(thisPage) {
-        this.loadData({thisPage:thisPage});
-    }
-    handleSort(sort){
-        this.loadData({sort:sort});
-    }
-    render() {
-        var breadcrumb = [];
-        breadcrumbs.map(function(item,idx) {
-            if (idx==breadcrumbs.length-1) {
-                breadcrumb.push(<li key={item} className="active">{item}</li>);
-            } else {
-                breadcrumb.push(<li key={item}>{item}</li>);
-            }
-        });
-        
-        return (
-            <div className="wrapRight wrapRight_form col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
-            <ol className="breadcrumb margin_top20">
-                {breadcrumb}
-            </ol>
-            <SearchList loadData={this.loadData}/>
-            <Table tabthitems={this.state.tabthitems} tabtritems={this.state.tabtritems} sort={this.state.sort} onSort={this.handleSort} checkTd={checkTd} />
-            <PageTab setPage={this.setPage} allNum={this.state.allNum} everyNum={this.state.everyNum} thisPage={this.state.thisPage} />
-            </div>
-        );
-    }
-};
-
-//  搜索框
-class SearchList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleClick=this.handleClick.bind(this);
+        this.handleClick1=this.handleClick1.bind(this);
+        this.state={"items":[],"courier":"","number":0};
     }
     handleClick(e){
-        var product_name = $(".product_name").val();
-        var product_id = $(".product_id").val();
+        // 获取id
+        var id = e.target.id;
+        var items = this.props.tritems;
 
-        var params1 = {"product_name":product_name,"product_id":product_id};
+        $(".alert_line_two").attr("style","display:block");
+        // 点击打印按钮调用filter_courier（）方法筛选快递返回来items(item:rows),
+        if(id==1){
+            this.setState(filter_courier(items,"中通"));//react根据条件更改内容要用setstate刷新
+        }else if (id==2) {
+            this.setState(filter_courier(items,"申通"));
+        }else if(id==3){
+            this.setState(filter_courier(items,"顺丰到付"));
+        }else {
+            this.setState({courier:"捡货单",number:this.props.tritems.length});//获取快递单总条数，放进setstate里刷新数据
+            $(".alert_line_two").attr("style","display:none");
+        }
+        $(".alert_one").show();
+        $(".modal-backdrop").show();
+    }
+    //打印
+    handleClick1(e){
+        // print_method();
+        var items = this.state.items;
+        if (items.length==0) {
+            alert("暂无订单");
+            return;
+        }
 
-        this.props.loadData(params1);
+        if(this.state.courier=="捡货单"){
+            print_method($(".jianlist_wrap").html());
+        }else {
+            //循环订单单号传给后台
+            var order_ids = [];
+            var begin_no = $(".print_number").val();
+            if (!begin_no) {
+                alert("请输入快递单号");
+                return;
+            }
+            var logi_name = this.state.courier;
+            for (var i = 0; i < items.length; i++) {
+                order_ids.push(items[i].order_id);
+            }
+            print_method($(".courier_wrap_print").html());
+            $.ajax({
+                url: "/batch_set_logi_no",
+                dataType: 'json',
+                type: 'POST',
+                data: {"logi_name":logi_name,"begin_no":begin_no,"order_ids":JSON.stringify(order_ids)},
+                success: function(data) {
+                    if (data.success) {
+                        alert("保存成功！");
+                    }else {
+                        alert("保存失败！");
+                    }
+                }.bind(this),
+                error: function(xhr, status, err) {
+                }.bind(this)
+            });
 
-    };
+        }
+
+
+
+
+
+    }
+    render() {
+
+
+
+        return (
+            <div className="wrapRight col-sm-3 col-sm-offset-1">
+                <div className="news show-grid">此处显示提醒信息</div>
+                <div className="courier">
+                    <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large " onClick={this.handleClick} onClick={this.handleClick}><img src="images/dayin.png" alt=""/>订单</p></div>
+                    <div className="button_wrap">
+                        <p id="1" className="button button-block button-rounded button-highlight button-large show-grid" onClick={this.handleClick}><img src="images/zhongtong.png" alt=""/>中通</p>
+                        <p id="2" className="button button-block button-rounded button-caution button-large show-grid" onClick={this.handleClick}><img src="images/shentong.png" alt=""/>申通</p>
+                        <p id="3" className="button button-block button-rounded button-royal button-large" onClick={this.handleClick}><img src="images/shunfeng.png" alt=""/>顺风</p>
+                    </div>
+                </div>
+                <div className="alert alert_one">
+                    <div className="modal-dialog modal-sm" role="document">
+                        <div className="modal-content modal_content_padding">
+                        <p><span>{this.state.courier}</span> &nbsp;&nbsp;&nbsp;　<span>共<u>{this.state.number} 单</u></span></p>
+
+
+                        <p className="alert_line_two">设置 <span className="courier_input"><input className="print_number" type="text" placeholder="初始打印单号" /></span></p>
+                        <hr/>
+                        <button  className="button button-glow button-rounded button-raised button-primary print" onClick={this.handleClick1}>确认打印</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="courier_wrap_print">
+                <div className="courier_print">
+                {this.state.items.map(item => (
+                    <CourierZ key={item.id} item={item} courier={this.state.courier} />))
+                }
+                </div>
+                </div>
+            </div>
+        );
+    }
+};
+
+// 背景
+class Back extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick=this.handleClick.bind(this);
+    }
+    handleClick(e){
+        $(".alert_three").hide();
+        $(".alert_two").hide();
+        $(".alert_one").hide();
+        $(".modal-backdrop").hide();
+    }
     render() {
         return (
-            <div className="row search_margin_botton">
-            <div className="col-lg-3 col-sm-3 show-grid">
-            <div className="input-group">
-            <input type="text" className="form-control product_id" placeholder="编号..." />
-            <span className="input-group-btn">
-            </span>
-            </div>
-            </div>
-            <div className="col-lg-3 col-sm-3 show-grid">
-            <div className="input-group">
-            <input type="text" className="form-control product_name" placeholder="名称..." />
-            <span className="input-group-btn">
-            </span>
-            </div>
-            </div>
-            <div className="col-lg-3 col-sm-3 show-grid">
-            <div className="input-group">
-            <input type="text" className="form-control host_name" placeholder="编码..." />
-            <span className="input-group-btn">
-            </span>
-            </div>
-            </div>
-            <div className="col-lg-2 col-sm-2 show-grid">
-            <div className="input-group">
-            <input type="text" className="form-control ip_address" placeholder="批次..." />
-            </div>
-            </div>
-            <div className="col-lg-1 col-sm-1 show-grid">
-            <div className="input-group">
-            <span className="input-group-btn">
-            <button className="btn btn-default" id="search_botton_left" type="button" onClick={this.handleClick}>查询</button>
-            </span>
-            </div>
-            </div>
-            </div>
-        )
-    }
-};
-
-//判断特殊列
-var checkTd = function(defaultTd) {
-    var id = this.props.item.id;
-    var href = "noob_sort?product_id="+id;
-    var href1 = "master?product_id="+id;
-    
-    if(this.props.thitem.type=="operation"){
-        return (
-            <td><span className="btn btn-primary btn-xs operate_announce"><a href={href}>菜鸟</a></span>
-            <span className="btn btn-info btn-xs operate_announce"><a href={href1}>高手</a></span></td>
+            <div className="modal-backdrop fade in" onClick={this.handleClick}></div>
         );
-    }else {
-        return defaultTd;
     }
 };
 
+// 快递模版
+class CourierZ extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        var courier = this.props.item.logi_name;
+        var style1 = "",style2 = "",style3 = "",style4 = "",style5 = "",style6 = "",style7 = "",style8 = "";
+
+        if(courier=="中通"){
+            style1={position: "relative",width:"652px",height:"363px"};
+            style2={position: "absolute",top: "76px",left: "107px"};
+            style3={position: "absolute",top: "130px",left: "107px"};
+            style4={position: "absolute",top: "183px",left: "120px"};
+            style5={position: "absolute",top: "79px",left: "375px"};
+            style6={position: "absolute",top: "130px",left: "375px"};
+            style7={position: "absolute",top: "183px",left: "388px"};
+            style8={position: "absolute",top: "280px",left: "107px"};
+        }else if (courier=="申通") {
+            style1={position: "relative",width:"652px",height:"363px"};
+            style2={position: "absolute",top: "83px",left: "102px"};
+            style3={position: "absolute",top: "141px",left: "96px"};
+            style4={position: "absolute",top: "196px",left: "120px"};
+            style5={position: "absolute",top: "84px",left: "380px"};
+            style6={position: "absolute",top: "140px",left: "372px"};
+            style7={position: "absolute",top: "195px",left: "400px"};
+            style8={position: "absolute",top: "298px",left: "107px"};
+        }else {
+            style1={position: "relative",width:"652px",height:"363px"};
+            style2={position: "absolute",top: "94px",left: "232px"};
+            style3={position: "absolute",top: "115px",left: "77px"};
+            style4={position: "absolute",top: "152px",left: "137px"};
+            style5={position: "absolute",top: "200px",left: "240px"};
+            style6={position: "absolute",top: "218px",left: "84px"};
+            style7={position: "absolute",top: "254px",left: "137px"};
+            style8={position: "absolute",top: "216px",left: "517px"};
+        }
+
+
+        return (
+            <div className="courier_wrap">
+                <div className="courier_relative" style={style1}>
+                    <span className="courier_name1" style={style2}>san</span>
+                    <span className="courier_address1" style={style3}>{this.props.item.address}</span>
+                    <span className="courier_tel1" style={style4}>18112345678</span>
+                    <span className="courier_name2" style={style5}>{this.props.item.linkname}</span>
+                    <span className="courier_address2" style={style6}>{this.props.item.detail_address}</span>
+                    <span className="courier_tel2" style={style7}>{this.props.item.mobile}</span>
+                    <span className="courier_name3" style={style8}>{this.props.item.linkname}</span>
+                </div>
+            </div>
+        );
+    }
+};
+
+class JianList extends React.Component {
+    render() {
+        return (
+            <div className="jianlist_wrap">
+                <div className="jianlist">
+                {this.props.tritems.map((item,index) => (
+                    <JianListUl key={item.id} item={item} index={index}/>))
+                }
+                </div>
+            </div>
+        );
+    }
+};
+class JianListUl extends React.Component {
+    render() {
+        var style1 = { paddingLeft:"0", width:"96%",margin:"0 auto 15px",display:"flex",overflow:"hidden",border:"1px solid #ddd"};
+        var style2 = {fontSize:"12px",textAlign:"center",width:"10%",overflow:"hidden",listStyle:"none"};
+
+        var style5 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none",textAlign:"center"};
+        var style6 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none"};
+        var style4 = {width:"50%",overflow:"hidden",listStyle:"none"};
+        return (
+            <ul className="jianlist_ul" style={style1}>
+                <li style={style2}>序号:<p>{this.props.index+1}</p></li>
+                <li style={style4}>
+                {this.props.item.details.map((item) => (
+                    <JianListLi key={item.product_id} item={item}/>))
+                }
+                </li>
+                <li style={style5}>
+                    联系电话:<p>{this.props.item.mobile}</p>
+                </li>
+                <li style={style6}>地址:<p>{this.props.item.detail_address}</p></li>
+            </ul>
+        );
+    }
+};
+class JianListLi extends React.Component {
+    render() {
+        var style1 = {fontSize:"12px",float:"left",width:"30%",overflow:"hidden"};
+        var style2 = {fontSize:"12px",float:"left",width:"60%",overflow:"hidden"};
+        var style3 = {fontSize:"12px",float:"left",width:"10%",overflow:"hidden",textAlign:"center"};
+        var style4 = {overflow:"hidden"};
+        return (
+            <div style={style4}>
+                <div style={style1}>商品编号:<p>{this.props.item.product_id}</p></div>
+                <div style={style2}>商品名称:<p>{this.props.item.product_name}</p></div>
+                <div style={style3}>商品数量:<p>{this.props.item.number}</p></div>
+            </div>
+        );
+    }
+};
 // 返回到页面
 ReactDOM.render(
     <Wrap/>,

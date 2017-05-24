@@ -11,7 +11,7 @@ class Logo extends React.Component {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="/">电商后台</a>
+            <a className="navbar-brand" href="/">仓库管理</a>
             </div>
         );
     }
