@@ -21,6 +21,8 @@ var eventproxy = require('eventproxy');
 var moduel_prefix = 'drp_warehouse_logistics';
 
 exports.register = function(server, options, next) {
+    var service_info = "drp warehouse";
+    
     server.route([
         //查询等待发货的运单
         {
@@ -52,6 +54,8 @@ exports.register = function(server, options, next) {
                         
                         uu_request.do_get_method(order_url,function(err,content) {
                             var ec_orders = content.rows;
+                            var products = content.products;
+                            
                             var m_ec_order = {};
                             _.each(ec_orders,function(ec_order) {
                                 m_ec_order[ec_order.order_id] = ec_order;
@@ -62,6 +66,14 @@ exports.register = function(server, options, next) {
                                 var row = _.merge(logistics_order,m_ec_order[logistics_order.order_id]);
                                 row.product_count = m_ec_order[logistics_order.order_id].details.length;
                                 row.address = row.to_province+row.to_city+row.to_district;
+                                
+                                //补充产品信息
+                                _.each(row.details,function(detail) {
+                                    if (products[detail.product_id]) {
+                                        detail.product_name=products[detail.product_id].product_name;
+                                    }
+                                });
+                                
                                 rows.push(row);
                             });
                             
@@ -70,6 +82,35 @@ exports.register = function(server, options, next) {
                     }
                 });
             },
+        },
+        
+        //批量设置物流单号
+        {
+            method: 'POST',
+            path: '/batch_set_logi_no',
+            handler: function(request, reply) {
+                //物流公司
+                var logi_name = request.payload.logi_name;
+                if (!logi_name) {
+                    return reply({"success":false,"message":"param logi_name is null","service_info":service_info});
+                }
+                var begin_no = request.payload.begin_no;
+                if (!begin_no) {
+                    return reply({"success":false,"message":"param begin_no is null","service_info":service_info});
+                }
+                //订单号列表
+                var order_ids = request.payload.order_ids;
+                if (!order_ids) {
+                    return reply({"success":false,"message":"param order_ids is null","service_info":service_info});
+                }
+                
+                var url = "http://211.149.248.241:18013/order/batch_set_logi_no";
+                var data = {"logi_name":logi_name,"begin_no":begin_no,"order_ids":order_ids};
+                
+                uu_request.do_post_method(url,data,function(err,content) {
+                    return reply({"success":true,"message":"ok"});
+                });
+            }
         },
         
     ]);
