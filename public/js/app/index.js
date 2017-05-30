@@ -9708,8 +9708,6 @@ module.exports = __webpack_require__(115);
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -9939,7 +9937,6 @@ var Right = function (_React$Component5) {
 
         var _this7 = _possibleConstructorReturn(this, (Right.__proto__ || Object.getPrototypeOf(Right)).call(this, props));
 
-        _this7.handleClick = _this7.handleClick.bind(_this7);
         _this7.handleClick1 = _this7.handleClick1.bind(_this7);
         _this7.state = { "items": [], "courier": "", "number": 0 };
         return _this7;
@@ -9947,10 +9944,9 @@ var Right = function (_React$Component5) {
 
     _createClass(Right, [{
         key: 'handleClick',
-        value: function handleClick(e) {
-            // 获取id
-            var id = e.target.id;
+        value: function handleClick(id) {
             var items = this.props.tritems;
+            console.log(id);
 
             $(".alert_line_two").attr("style", "display:block");
             // 点击打印按钮调用filter_courier（）方法筛选快递返回来items(item:rows),
@@ -9960,9 +9956,11 @@ var Right = function (_React$Component5) {
                 this.setState(filter_courier(items, "申通"));
             } else if (id == 3) {
                 this.setState(filter_courier(items, "顺丰到付"));
-            } else {
+            } else if (id == 4) {
                 this.setState({ courier: "捡货单", number: this.props.tritems.length }); //获取快递单总条数，放进setstate里刷新数据
                 $(".alert_line_two").attr("style", "display:none");
+            } else {
+                alert("参数错误");
             }
             $(".alert_one").show();
             $(".modal-backdrop").show();
@@ -10031,7 +10029,7 @@ var Right = function (_React$Component5) {
                         { className: 'button_wrap show-grid' },
                         React.createElement(
                             'p',
-                            _defineProperty({ className: 'button button-block button-rounded button-primary button-large ', onClick: this.handleClick }, 'onClick', this.handleClick),
+                            { className: 'button button-block button-rounded button-primary button-large', onClick: this.handleClick.bind(this, 4) },
                             React.createElement('img', { src: 'images/dayin.png', alt: '' }),
                             '\u8BA2\u5355'
                         )
@@ -10041,19 +10039,19 @@ var Right = function (_React$Component5) {
                         { className: 'button_wrap' },
                         React.createElement(
                             'p',
-                            { id: '1', className: 'button button-block button-rounded button-highlight button-large show-grid', onClick: this.handleClick },
+                            { className: 'button button-block button-rounded button-highlight button-large show-grid', onClick: this.handleClick.bind(this, 1) },
                             React.createElement('img', { src: 'images/zhongtong.png', alt: '' }),
                             '\u4E2D\u901A'
                         ),
                         React.createElement(
                             'p',
-                            { id: '2', className: 'button button-block button-rounded button-caution button-large show-grid', onClick: this.handleClick },
+                            { className: 'button button-block button-rounded button-caution button-large show-grid', onClick: this.handleClick.bind(this, 2) },
                             React.createElement('img', { src: 'images/shentong.png', alt: '' }),
                             '\u7533\u901A'
                         ),
                         React.createElement(
                             'p',
-                            { id: '3', className: 'button button-block button-rounded button-royal button-large', onClick: this.handleClick },
+                            { className: 'button button-block button-rounded button-royal button-large', onClick: this.handleClick.bind(this, 3) },
                             React.createElement('img', { src: 'images/shunfeng.png', alt: '' }),
                             '\u987A\u98CE'
                         )

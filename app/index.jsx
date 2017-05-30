@@ -134,14 +134,12 @@ class Tr extends React.Component {
 class Right extends React.Component {
     constructor(props) {
         super(props);
-        this.handleClick=this.handleClick.bind(this);
         this.handleClick1=this.handleClick1.bind(this);
         this.state={"items":[],"courier":"","number":0};
     }
-    handleClick(e){
-        // 获取id
-        var id = e.target.id;
+    handleClick(id){
         var items = this.props.tritems;
+        console.log(id);
 
         $(".alert_line_two").attr("style","display:block");
         // 点击打印按钮调用filter_courier（）方法筛选快递返回来items(item:rows),
@@ -151,9 +149,11 @@ class Right extends React.Component {
             this.setState(filter_courier(items,"申通"));
         }else if(id==3){
             this.setState(filter_courier(items,"顺丰到付"));
-        }else {
+        }else if(id==4){
             this.setState({courier:"捡货单",number:this.props.tritems.length});//获取快递单总条数，放进setstate里刷新数据
             $(".alert_line_two").attr("style","display:none");
+        }else {
+            alert("参数错误");
         }
         $(".alert_one").show();
         $(".modal-backdrop").show();
@@ -213,11 +213,11 @@ class Right extends React.Component {
             <div className="wrapRight col-sm-3 col-sm-offset-1">
                 <div className="news show-grid">此处显示提醒信息</div>
                 <div className="courier">
-                    <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large " onClick={this.handleClick} onClick={this.handleClick}><img src="images/dayin.png" alt=""/>订单</p></div>
+                    <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large" onClick={this.handleClick.bind(this,4)}><img src="images/dayin.png" alt=""/>订单</p></div>
                     <div className="button_wrap">
-                        <p id="1" className="button button-block button-rounded button-highlight button-large show-grid" onClick={this.handleClick}><img src="images/zhongtong.png" alt=""/>中通</p>
-                        <p id="2" className="button button-block button-rounded button-caution button-large show-grid" onClick={this.handleClick}><img src="images/shentong.png" alt=""/>申通</p>
-                        <p id="3" className="button button-block button-rounded button-royal button-large" onClick={this.handleClick}><img src="images/shunfeng.png" alt=""/>顺风</p>
+                        <p className="button button-block button-rounded button-highlight button-large show-grid" onClick={this.handleClick.bind(this,1)}><img src="images/zhongtong.png" alt=""/>中通</p>
+                        <p className="button button-block button-rounded button-caution button-large show-grid" onClick={this.handleClick.bind(this,2)}><img src="images/shentong.png" alt=""/>申通</p>
+                        <p className="button button-block button-rounded button-royal button-large" onClick={this.handleClick.bind(this,3)}><img src="images/shunfeng.png" alt=""/>顺风</p>
                     </div>
                 </div>
                 <div className="alert alert_one">
