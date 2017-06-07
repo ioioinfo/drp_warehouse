@@ -54,7 +54,9 @@ class Wrap extends React.Component {
                      dataType: 'json',
                      type: 'GET',
                      success: function(data) {
-                         this.setState({tritems:data.rows})
+                         if(data.rows){
+                             this.setState({tritems:data.rows});
+                         }
                      }.bind(this),
                      error: function(xhr, status, err) {
                      }.bind(this)
@@ -161,7 +163,7 @@ class Right extends React.Component {
     //打印
     handleClick1(e){
         // print_method();
-        var items = this.state.items;
+        var items = this.props.tritems;
         if (items.length==0) {
             alert("暂无订单");
             return;

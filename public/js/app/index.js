@@ -9773,7 +9773,9 @@ var Wrap = function (_React$Component) {
                 dataType: 'json',
                 type: 'GET',
                 success: function (data) {
-                    this.setState({ tritems: data.rows });
+                    if (data.rows) {
+                        this.setState({ tritems: data.rows });
+                    }
                 }.bind(this),
                 error: function (xhr, status, err) {}.bind(this)
             });
@@ -9971,7 +9973,7 @@ var Right = function (_React$Component5) {
         key: 'handleClick1',
         value: function handleClick1(e) {
             // print_method();
-            var items = this.state.items;
+            var items = this.props.tritems;
             if (items.length == 0) {
                 alert("暂无订单");
                 return;
