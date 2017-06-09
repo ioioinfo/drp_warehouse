@@ -10285,7 +10285,7 @@ var JianList = function (_React$Component8) {
     _createClass(JianList, [{
         key: 'render',
         value: function render() {
-            var style = { width: "883px" };
+            var style = { width: "1707px" };
             return React.createElement(
                 'div',
                 { className: 'jianlist_wrap' },
@@ -10317,7 +10317,7 @@ var JianListUl = function (_React$Component9) {
     _createClass(JianListUl, [{
         key: 'render',
         value: function render() {
-            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: "340px", display: "flex", overflow: "hidden", border: "1px solid #ddd", fontFamily: "微软雅黑" };
+            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: "659.5px", display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
             var style2 = { fontSize: "12px", textAlign: "center", width: "10%", overflow: "hidden", listStyle: "none" };
 
             var style5 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none", textAlign: "center" };
