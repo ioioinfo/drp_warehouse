@@ -141,7 +141,7 @@ class Right extends React.Component {
     }
     handleClick(id){
         var items = this.props.tritems;
-        console.log(id);
+
 
         $(".alert_line_two").attr("style","display:block");
         // 点击打印按钮调用filter_courier（）方法筛选快递返回来items(item:rows),
@@ -163,8 +163,10 @@ class Right extends React.Component {
     //打印
     handleClick1(e){
         // print_method();
-        var items = this.props.tritems;
-        if (items.length==0) {
+        var items = this.state.items;
+        var jianitems = this.props.tritems;
+        console.log(items);
+        if (jianitems.length==0) {
             alert("暂无订单");
             return;
         }
@@ -199,13 +201,7 @@ class Right extends React.Component {
                 error: function(xhr, status, err) {
                 }.bind(this)
             });
-
         }
-
-
-
-
-
     }
     render() {
 
@@ -274,47 +270,54 @@ class CourierZ extends React.Component {
     render() {
         var courier = this.props.item.logi_name;
         var style1 = "",style2 = "",style3 = "",style4 = "",style5 = "",style6 = "",style7 = "",style8 = "";
-
+        var address = "";
+        var courier_name = "";
         if(courier=="中通"){
             style1={position: "relative",width:"652px",height:"363px"};
-            style2={position: "absolute",top: "76px",left: "107px"};
-            style3={position: "absolute",top: "130px",left: "107px"};
-            style4={position: "absolute",top: "183px",left: "120px"};
-            style5={position: "absolute",top: "79px",left: "375px"};
-            style6={position: "absolute",top: "130px",left: "375px"};
-            style7={position: "absolute",top: "183px",left: "388px"};
+            style2={position: "absolute",top: "60px",left: "0px"};
+            style3={position: "absolute",top: "96px",left: "7px"};
+            style4={position: "absolute",top: "169px",left: "7px"};
+            style5={position: "absolute",top: "60px",left: "318px"};
+            style6={position: "absolute",top: "96px",left: "312px",fontSize:"12px"};
+            style7={position: "absolute",top: "169px",left: "312px"};
             style8={position: "absolute",top: "280px",left: "107px"};
+            address = "南通市紫琅路2号同道楼3楼";
+            courier_name = "善淘网";
         }else if (courier=="申通") {
             style1={position: "relative",width:"652px",height:"363px"};
             style2={position: "absolute",top: "83px",left: "102px"};
             style3={position: "absolute",top: "141px",left: "96px"};
-            style4={position: "absolute",top: "196px",left: "120px"};
-            style5={position: "absolute",top: "84px",left: "380px"};
-            style6={position: "absolute",top: "140px",left: "372px"};
-            style7={position: "absolute",top: "195px",left: "400px"};
+            style4={position: "absolute",top: "169px",left: "21px"};
+            style5={position: "absolute",top: "64px",left: "338px"};
+            style6={position: "absolute",top: "120px",left: "289px",fontSize:"12px"};
+            style7={position: "absolute",top: "158px",left: "360px"};
             style8={position: "absolute",top: "298px",left: "107px"};
-        }else {
+            address = "";
+            courier_name = "";
+        }else if (courier=="顺丰到付"){
             style1={position: "relative",width:"652px",height:"363px"};
             style2={position: "absolute",top: "94px",left: "232px"};
             style3={position: "absolute",top: "115px",left: "77px"};
             style4={position: "absolute",top: "152px",left: "137px"};
             style5={position: "absolute",top: "200px",left: "240px"};
-            style6={position: "absolute",top: "218px",left: "84px"};
+            style6={position: "absolute",top: "218px",left: "84px",fontSize:"12px"};
             style7={position: "absolute",top: "254px",left: "137px"};
             style8={position: "absolute",top: "216px",left: "517px"};
+            address = "南通市紫琅路2号同道楼3楼";
+            courier_name = "善淘网";
         }
 
 
         return (
             <div className="courier_wrap">
                 <div className="courier_relative" style={style1}>
-                    <span className="courier_name1" style={style2}>san</span>
-                    <span className="courier_address1" style={style3}>{this.props.item.address}</span>
+                    <span className="courier_name1" style={style2}>{courier_name}</span>
+                    <span className="courier_address1" style={style3}>{address}</span>
                     <span className="courier_tel1" style={style4}>18112345678</span>
                     <span className="courier_name2" style={style5}>{this.props.item.linkname}</span>
-                    <span className="courier_address2" style={style6}>{this.props.item.detail_address}</span>
+                    <span className="courier_address2" style={style6}>{this.props.item.to_province}{this.props.item.to_city}<br/>{this.props.item.detail_address}</span>
                     <span className="courier_tel2" style={style7}>{this.props.item.mobile}</span>
-                    <span className="courier_name3" style={style8}>{this.props.item.linkname}</span>
+                    <span className="courier_name3" style={style8}></span>
                 </div>
             </div>
         );
@@ -323,9 +326,10 @@ class CourierZ extends React.Component {
 
 class JianList extends React.Component {
     render() {
+        var style = {height:"164px",padding:"5px"}
         return (
             <div className="jianlist_wrap">
-                <div className="jianlist">
+                <div className="jianlist" style={style}>
                 {this.props.tritems.map((item,index) => (
                     <JianListUl key={item.id} item={item} index={index}/>))
                 }
@@ -336,7 +340,7 @@ class JianList extends React.Component {
 };
 class JianListUl extends React.Component {
     render() {
-        var style1 = { paddingLeft:"0", width:"96%",margin:"0 auto 15px",display:"flex",overflow:"hidden",border:"1px solid #ddd"};
+        var style1 = { paddingLeft:"0", width:"100%",margin:"0",display:"flex",overflow:"hidden",border:"1px solid #ddd"};
         var style2 = {fontSize:"12px",textAlign:"center",width:"10%",overflow:"hidden",listStyle:"none"};
 
         var style5 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none",textAlign:"center"};
@@ -353,7 +357,7 @@ class JianListUl extends React.Component {
                 <li style={style5}>
                     联系电话:<p>{this.props.item.mobile}</p>
                 </li>
-                <li style={style6}>地址:<p>{this.props.item.detail_address}</p></li>
+                <li style={style6}>地址:<p>{this.props.item.to_province}{this.props.item.to_city}{this.props.item.detail_address}</p></li>
             </ul>
         );
     }
