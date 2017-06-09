@@ -9726,6 +9726,7 @@ var breadcrumbs = ["商品", "商品分类"];
 // 跳转打印页面
 var print_method = function print_method(docStr) {
     var newWindow = window.open("打印窗口", "_blank"); //打印窗口要换成页面的url
+    newWindow.document.write("<style>body{margin:0;}</style>");
     newWindow.document.write(docStr);
     newWindow.document.write("<script>window.onload=window.print();</script>");
     $(".courier_wrap_print").attr("style", "display:none;");
@@ -10189,7 +10190,7 @@ var CourierZ = function (_React$Component7) {
             var address = "";
             var courier_name = "";
             if (courier == "中通") {
-                style1 = { position: "relative", width: "652px", height: "363px" };
+                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
                 style2 = { position: "absolute", top: "60px", left: "0px" };
                 style3 = { position: "absolute", top: "96px", left: "7px" };
                 style4 = { position: "absolute", top: "169px", left: "7px" };
@@ -10200,18 +10201,18 @@ var CourierZ = function (_React$Component7) {
                 address = "南通市紫琅路2号同道楼3楼";
                 courier_name = "善淘网";
             } else if (courier == "申通") {
-                style1 = { position: "relative", width: "652px", height: "363px" };
+                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
                 style2 = { position: "absolute", top: "83px", left: "102px" };
                 style3 = { position: "absolute", top: "141px", left: "96px" };
-                style4 = { position: "absolute", top: "169px", left: "21px" };
-                style5 = { position: "absolute", top: "64px", left: "338px" };
-                style6 = { position: "absolute", top: "120px", left: "289px", fontSize: "12px" };
-                style7 = { position: "absolute", top: "158px", left: "360px" };
+                style4 = { position: "absolute", top: "163px", left: "21px" };
+                style5 = { position: "absolute", top: "69px", left: "338px" };
+                style6 = { position: "absolute", top: "127px", left: "306px", fontSize: "12px" };
+                style7 = { position: "absolute", top: "161px", left: "360px" };
                 style8 = { position: "absolute", top: "298px", left: "107px" };
                 address = "";
                 courier_name = "";
             } else if (courier == "顺丰到付") {
-                style1 = { position: "relative", width: "652px", height: "363px" };
+                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
                 style2 = { position: "absolute", top: "94px", left: "232px" };
                 style3 = { position: "absolute", top: "115px", left: "77px" };
                 style4 = { position: "absolute", top: "152px", left: "137px" };
@@ -10222,7 +10223,6 @@ var CourierZ = function (_React$Component7) {
                 address = "南通市紫琅路2号同道楼3楼";
                 courier_name = "善淘网";
             }
-
             return React.createElement(
                 'div',
                 { className: 'courier_wrap' },
@@ -10285,7 +10285,7 @@ var JianList = function (_React$Component8) {
     _createClass(JianList, [{
         key: 'render',
         value: function render() {
-            var style = { height: "164px", padding: "5px" };
+            var style = { width: "883px" };
             return React.createElement(
                 'div',
                 { className: 'jianlist_wrap' },
@@ -10317,12 +10317,12 @@ var JianListUl = function (_React$Component9) {
     _createClass(JianListUl, [{
         key: 'render',
         value: function render() {
-            var style1 = { paddingLeft: "0", width: "100%", margin: "0", display: "flex", overflow: "hidden", border: "1px solid #ddd" };
+            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: "340px", display: "flex", overflow: "hidden", border: "1px solid #ddd", fontFamily: "微软雅黑" };
             var style2 = { fontSize: "12px", textAlign: "center", width: "10%", overflow: "hidden", listStyle: "none" };
 
             var style5 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none", textAlign: "center" };
             var style6 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none" };
-            var style4 = { width: "50%", overflow: "hidden", listStyle: "none" };
+            var style4 = { width: "50%", overflow: "hidden", listStyle: "none", fontFamily: "微软雅黑" };
             return React.createElement(
                 'ul',
                 { className: 'jianlist_ul', style: style1 },
@@ -10339,8 +10339,8 @@ var JianListUl = function (_React$Component9) {
                 React.createElement(
                     'li',
                     { style: style4 },
-                    this.props.item.details.map(function (item) {
-                        return React.createElement(JianListLi, { key: item.product_id, item: item });
+                    this.props.item.details.map(function (item, index) {
+                        return React.createElement(JianListLi, { key: item.product_id, item: item, index: index });
                     })
                 ),
                 React.createElement(
@@ -10390,13 +10390,22 @@ var JianListLi = function (_React$Component10) {
             var style2 = { fontSize: "12px", float: "left", width: "60%", overflow: "hidden" };
             var style3 = { fontSize: "12px", float: "left", width: "10%", overflow: "hidden", textAlign: "center" };
             var style4 = { overflow: "hidden" };
+            var product_id = "";
+            var product_name = "";
+            var number = "";
+            var index = this.props.index;
+            if (index == 0) {
+                var product_id = "商品编号:";
+                var product_name = "商品名称:";
+                var number = "商品数量:";
+            }
             return React.createElement(
                 'div',
                 { style: style4 },
                 React.createElement(
                     'div',
                     { style: style1 },
-                    '\u5546\u54C1\u7F16\u53F7:',
+                    product_id,
                     React.createElement(
                         'p',
                         null,
@@ -10406,7 +10415,7 @@ var JianListLi = function (_React$Component10) {
                 React.createElement(
                     'div',
                     { style: style2 },
-                    '\u5546\u54C1\u540D\u79F0:',
+                    product_name,
                     React.createElement(
                         'p',
                         null,
@@ -10416,7 +10425,7 @@ var JianListLi = function (_React$Component10) {
                 React.createElement(
                     'div',
                     { style: style3 },
-                    '\u5546\u54C1\u6570\u91CF:',
+                    number,
                     React.createElement(
                         'p',
                         null,
