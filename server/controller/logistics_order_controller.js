@@ -84,6 +84,50 @@ exports.register = function(server, options, next) {
             },
         },
         
+        //查询打印设置
+        {
+            method: 'GET',
+            path: '/get_print_setting',
+            handler: function(request, reply) {
+                var person_id = "1";
+                var print_type = request.query.print_type;
+                if (!print_type) {
+                    return reply({"success":false,"message":"param print_type is null","service_info":service_info});
+                }
+                
+                var url = "http://211.149.248.241:16003/get_print_setting_by_person";
+                url = url + "?person_id="+person_id+"&print_type="+print_type;
+                
+                uu_request.do_get_method(url,function(err,content) {
+                    return reply({"success":true,"message":"ok","row":content.row});
+                });
+            }
+        },
+        
+        //保存打印设置
+        {
+            method: 'POST',
+            path: '/save_print_setting',
+            handler: function(request, reply) {
+                var person_id = "1";
+                var print_type = request.payload.print_type;
+                if (!print_type) {
+                    return reply({"success":false,"message":"param print_type is null","service_info":service_info});
+                }
+                var settings = request.payload.settings;
+                if (!settings) {
+                    return reply({"success":false,"message":"param settings is null","service_info":service_info});
+                }
+                
+                var url = "http://211.149.248.241:16003/save_print_setting";
+                var data = {"person_id":person_id,"print_type":print_type,"settings":settings};
+                
+                uu_request.do_post_method(url,data,function(err,content) {
+                    return reply({"success":true,"message":"ok"});
+                });
+            }
+        },
+        
         //批量设置物流单号
         {
             method: 'POST',
