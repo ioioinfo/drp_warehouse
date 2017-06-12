@@ -5,8 +5,6 @@ var Logo = require('Logo');
 var WrapRightHead = require('WrapRightHead');
 var WrapBottom = require('WrapBottom');
 
-var breadcrumbs = ["商品","商品分类"];
-
 
 // 跳转打印页面
 var print_method = function(docStr){

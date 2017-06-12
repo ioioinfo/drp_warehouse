@@ -9721,8 +9721,6 @@ var Logo = __webpack_require__(81);
 var WrapRightHead = __webpack_require__(83);
 var WrapBottom = __webpack_require__(82);
 
-var breadcrumbs = ["商品", "商品分类"];
-
 // 跳转打印页面
 var print_method = function print_method(docStr) {
     var newWindow = window.open("打印窗口", "_blank"); //打印窗口要换成页面的url
