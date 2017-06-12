@@ -38,6 +38,14 @@ exports.register = function(server, options, next) {
             },
         },
         
+        {
+            method: 'GET',
+            path: '/login',
+            handler: function(request, reply) {
+                return reply.view("login");
+            },
+        },
+        
     ]);
 
     next();
