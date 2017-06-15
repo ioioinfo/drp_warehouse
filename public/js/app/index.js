@@ -22425,7 +22425,9 @@ var Right = function (_React$Component5) {
 
         var _this7 = _possibleConstructorReturn(this, (Right.__proto__ || Object.getPrototypeOf(Right)).call(this, props));
 
+        _this7.handleClick = _this7.handleClick.bind(_this7);
         _this7.handleClick1 = _this7.handleClick1.bind(_this7);
+        _this7.handleClick2 = _this7.handleClick2.bind(_this7);
         _this7.state = { "items": [], "courier": "", "number": 0 };
         return _this7;
     }
@@ -22498,6 +22500,30 @@ var Right = function (_React$Component5) {
             }
         }
     }, {
+        key: 'handleClick2',
+        value: function handleClick2(e) {
+            if (!$(".seeting_height").val()) {
+                alert("请输入高度");
+                return;
+            }
+            height_num = $(".seeting_height").val();
+
+            $.ajax({
+                url: "/save_print_setting",
+                dataType: 'json',
+                type: 'POST',
+                data: { "print_type": "picking_orders", "settings": JSON.stringify({ "height": height_num }) },
+                success: function (data) {
+                    if (data.success) {
+                        alert("保存成功！");
+                    } else {
+                        alert("保存失败！");
+                    }
+                }.bind(this),
+                error: function (xhr, status, err) {}.bind(this)
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this8 = this;
@@ -22508,7 +22534,12 @@ var Right = function (_React$Component5) {
                 React.createElement(
                     'div',
                     { className: 'news show-grid' },
-                    '\u6B64\u5904\u663E\u793A\u63D0\u9192\u4FE1\u606F'
+                    React.createElement('input', { type: 'text', className: 'seeting_height' }),
+                    React.createElement(
+                        'button',
+                        { onClick: this.handleClick2 },
+                        '\u4FDD\u5B58'
+                    )
                 ),
                 React.createElement(
                     'div',
@@ -22761,13 +22792,32 @@ var CourierZ = function (_React$Component7) {
 var JianList = function (_React$Component8) {
     _inherits(JianList, _React$Component8);
 
-    function JianList() {
+    function JianList(props) {
         _classCallCheck(this, JianList);
 
-        return _possibleConstructorReturn(this, (JianList.__proto__ || Object.getPrototypeOf(JianList)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (JianList.__proto__ || Object.getPrototypeOf(JianList)).call(this, props));
     }
 
     _createClass(JianList, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            $.ajax({
+                url: "/get_print_setting?print_type=picking_orders",
+                dataType: 'json',
+                type: 'GET',
+                success: function (data) {
+                    if (data.row && data.row.settings) {
+                        height_num = data.row.settings.height;
+                        if (!height_num) {
+                            height_num = "650px";
+                        }
+                        $(".seeting_height").val(height_num);
+                    }
+                }.bind(this),
+                error: function (xhr, status, err) {}.bind(this)
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var style = { width: "1707px" };
@@ -22802,7 +22852,8 @@ var JianListUl = function (_React$Component9) {
     _createClass(JianListUl, [{
         key: 'render',
         value: function render() {
-            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: "659.5px", display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
+            var height = this.props.height;
+            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: height_num, display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
             var style2 = { fontSize: "12px", textAlign: "center", width: "10%", overflow: "hidden", listStyle: "none" };
 
             var style5 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none", textAlign: "center" };
