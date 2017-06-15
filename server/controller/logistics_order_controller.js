@@ -84,6 +84,35 @@ exports.register = function(server, options, next) {
             },
         },
         
+        //发货单列表页面
+        {
+            method: 'GET',
+            path: '/logistics_orders',
+            handler: function(request, reply) {
+                return reply.view("logistics_orders");
+            }
+        },
+        
+        //发货列表数据
+        {
+            method: 'GET',
+            path: '/list_logistics_order',
+            handler: function(request, reply) {
+                var person_id = "1";
+                var print_type = request.query.print_type;
+                if (!print_type) {
+                    return reply({"success":false,"message":"param print_type is null","service_info":service_info});
+                }
+                
+                var url = "http://211.149.248.241:16003/list_data";
+                url = url + "?org_code=ioio";
+                
+                uu_request.do_get_method(url,function(err,content) {
+                    return reply({"success":true,"message":"ok","rows":content.rows});
+                });
+            }
+        },
+        
         //查询打印设置
         {
             method: 'GET',
