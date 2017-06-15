@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 184);
+/******/ 	return __webpack_require__(__webpack_require__.s = 185);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -22187,7 +22187,8 @@ module.exports = traverseAllChildren;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 184 */
+/* 184 */,
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22208,31 +22209,6 @@ var Logo = __webpack_require__(81);
 var WrapRightHead = __webpack_require__(83);
 var WrapBottom = __webpack_require__(82);
 
-// 跳转打印页面
-var print_method = function print_method(docStr) {
-    var newWindow = window.open("打印窗口", "_blank"); //打印窗口要换成页面的url
-    newWindow.document.write("<style>body{margin:0;}</style>");
-    newWindow.document.write(docStr);
-    newWindow.document.write("<script>window.onload=window.print();</script>");
-    $(".courier_wrap_print").attr("style", "display:none;");
-    $(".alert").attr("style", "display:none;");
-    $(".modal-backdrop").attr("style", "display:none;");
-    //newWindow.print();
-    //newWindow.close();
-};
-// 过滤快递公司
-var filter_courier = function filter_courier(items, courier) {
-    var rows = [];
-    for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.logi_name == courier) {
-            rows.push(item);
-        }
-    }
-
-    return { "items": rows, "courier": courier, "number": rows.length };
-};
-
 // 框架
 
 var Wrap = function (_React$Component) {
@@ -22244,14 +22220,15 @@ var Wrap = function (_React$Component) {
         // 初始化一个空对象
         var _this = _possibleConstructorReturn(this, (Wrap.__proto__ || Object.getPrototypeOf(Wrap)).call(this, props));
 
-        _this.state = { thitems: [], tritems: [] };
+        _this.state = { thitems: [], tritems: [], indexs: [] };
         return _this;
     }
 
     _createClass(Wrap, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var th = [{ sort: "order_id", th: "订单号" }, { sort: "address", th: "地址" }, { sort: "linkname", th: "订单人" }, { sort: "mobile", th: "手机" }, { sort: "product_count", th: "数量" }, { sort: "logi_name", th: "快递" }];
+
+            var th = [{ sort: "order_id", th: "订单号" }, { sort: "address", th: "地址" }, { sort: "linkname", th: "订单人" }, { sort: "mobile", th: "手机" }, { sort: "product_count", th: "数量" }, { sort: "logi_name", th: "快递" }, { sort: "operation", th: "操作", type: "operation" }];
 
             this.setState({ thitems: th });
             $.ajax({
@@ -22261,6 +22238,11 @@ var Wrap = function (_React$Component) {
                 success: function (data) {
                     if (data.rows) {
                         this.setState({ tritems: data.rows });
+                        var indexs = [];
+                        var index = 0;
+                        for (var i = 0; i < data.rows.length; i++) {
+                            orders_map[data.rows[i].id] = data.rows[i];
+                        }
                     }
                 }.bind(this),
                 error: function (xhr, status, err) {}.bind(this)
@@ -22288,11 +22270,9 @@ var Wrap = function (_React$Component) {
                     React.createElement(
                         'div',
                         { className: 'row' },
-                        React.createElement(Left, { thitems: this.state.thitems, tritems: this.state.tritems }),
-                        React.createElement(Right, { tritems: this.state.tritems })
+                        React.createElement(Left, { thitems: this.state.thitems, tritems: this.state.tritems, indexs: this.state.indexs })
                     )
                 ),
-                React.createElement(JianList, { tritems: this.state.tritems }),
                 React.createElement(Back, null)
             );
         }
@@ -22320,7 +22300,7 @@ var Left = function (_React$Component2) {
 
             return React.createElement(
                 'div',
-                { className: 'wrapLeft col-sm-8' },
+                { className: 'wrapLeft col-sm-12' },
                 React.createElement(
                     'div',
                     { className: 'table-responsive' },
@@ -22346,7 +22326,8 @@ var Left = function (_React$Component2) {
                             })
                         )
                     )
-                )
+                ),
+                React.createElement(Alert, { tritems: this.props.tritems, indexs: this.props.indexs })
             );
         }
     }]);
@@ -22401,11 +22382,7 @@ var Tr = function (_React$Component4) {
                 'tr',
                 null,
                 this.props.thitems.map(function (item) {
-                    return React.createElement(
-                        'td',
-                        { key: item.sort, scope: 'row' },
-                        _this6.props.item[item.sort]
-                    );
+                    return React.createElement(Td, { key: item.sort, scope: 'row', item: _this6.props.item, thitem: item });
                 })
             );
         }
@@ -22415,210 +22392,174 @@ var Tr = function (_React$Component4) {
 }(React.Component);
 
 ;
-// 右侧操作
 
-var Right = function (_React$Component5) {
-    _inherits(Right, _React$Component5);
+var Td = function (_React$Component5) {
+    _inherits(Td, _React$Component5);
 
-    function Right(props) {
-        _classCallCheck(this, Right);
+    function Td(props) {
+        _classCallCheck(this, Td);
 
-        var _this7 = _possibleConstructorReturn(this, (Right.__proto__ || Object.getPrototypeOf(Right)).call(this, props));
+        var _this7 = _possibleConstructorReturn(this, (Td.__proto__ || Object.getPrototypeOf(Td)).call(this, props));
 
-        _this7.handleClick1 = _this7.handleClick1.bind(_this7);
-        _this7.state = { "items": [], "courier": "", "number": 0 };
+        _this7.handleClick = _this7.handleClick.bind(_this7);
         return _this7;
     }
 
-    _createClass(Right, [{
+    _createClass(Td, [{
         key: 'handleClick',
-        value: function handleClick(id) {
-            var items = this.props.tritems;
-
-            $(".alert_line_two").attr("style", "display:block");
-            // 点击打印按钮调用filter_courier（）方法筛选快递返回来items(item:rows),
-            if (id == 1) {
-                this.setState(filter_courier(items, "中通")); //react根据条件更改内容要用setstate刷新
-            } else if (id == 2) {
-                this.setState(filter_courier(items, "申通"));
-            } else if (id == 3) {
-                this.setState(filter_courier(items, "顺丰到付"));
-            } else if (id == 4) {
-                this.setState({ courier: "捡货单", number: this.props.tritems.length }); //获取快递单总条数，放进setstate里刷新数据
-                $(".alert_line_two").attr("style", "display:none");
-            } else {
-                alert("参数错误");
-            }
+        value: function handleClick(e) {
+            event.stopPropagation();
+            var tarid = e.target.id;
+            var dataid = $("#" + tarid).data("id");
+            var linkname = orders_map[dataid].linkname;
+            var mobile = orders_map[dataid].mobile;
+            var address = orders_map[dataid].to_province + orders_map[dataid].to_city + orders_map[dataid].to_district + orders_map[dataid].detail_address;
+            $(".linkname").val(linkname);
+            $(".mobile").val(mobile);
+            $(".detail_address").val(address);
             $(".alert_one").show();
             $(".modal-backdrop").show();
-        }
-        //打印
-
-    }, {
-        key: 'handleClick1',
-        value: function handleClick1(e) {
-            // print_method();
-            var items = this.state.items;
-            var jianitems = this.props.tritems;
-            console.log(items);
-            if (jianitems.length == 0) {
-                alert("暂无订单");
-                return;
-            }
-
-            if (this.state.courier == "捡货单") {
-                print_method($(".jianlist_wrap").html());
-            } else {
-                //循环订单单号传给后台
-                var order_ids = [];
-                var begin_no = $(".print_number").val();
-                if (!begin_no) {
-                    alert("请输入快递单号");
-                    return;
-                }
-                var logi_name = this.state.courier;
-                for (var i = 0; i < items.length; i++) {
-                    order_ids.push(items[i].order_id);
-                }
-                print_method($(".courier_wrap_print").html());
-                $.ajax({
-                    url: "/batch_set_logi_no",
-                    dataType: 'json',
-                    type: 'POST',
-                    data: { "logi_name": logi_name, "begin_no": begin_no, "order_ids": JSON.stringify(order_ids) },
-                    success: function (data) {
-                        if (data.success) {
-                            alert("保存成功！");
-                        } else {
-                            alert("保存失败！");
-                        }
-                    }.bind(this),
-                    error: function (xhr, status, err) {}.bind(this)
-                });
-            }
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this8 = this;
+            var style = { "textAlign": "center" };
+            if (this.props.thitem.type == "operation") {
+                return React.createElement(
+                    'td',
+                    { style: style },
+                    React.createElement(
+                        'button',
+                        { onClick: this.handleClick, id: this.props.item.id, 'data-id': this.props.item.id, className: 'last_td' },
+                        '\u7F16\u8F91'
+                    )
+                );
+            } else {
+                return React.createElement(
+                    'td',
+                    null,
+                    this.props.item[this.props.thitem.sort]
+                );
+            }
+        }
+    }]);
 
+    return Td;
+}(React.Component);
+
+;
+
+var Alert = function (_React$Component6) {
+    _inherits(Alert, _React$Component6);
+
+    function Alert(props) {
+        _classCallCheck(this, Alert);
+
+        var _this8 = _possibleConstructorReturn(this, (Alert.__proto__ || Object.getPrototypeOf(Alert)).call(this, props));
+
+        _this8.handleClick = _this8.handleClick.bind(_this8);
+        return _this8;
+    }
+
+    _createClass(Alert, [{
+        key: 'handleClick',
+        value: function handleClick(e) {
+            $(".alert_one").hide();
+            $(".modal-backdrop").hide();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var style = { "left": "34%" };
             return React.createElement(
                 'div',
-                { className: 'wrapRight col-sm-3 col-sm-offset-1' },
+                { className: 'alert alert_one', style: style },
                 React.createElement(
                     'div',
-                    { className: 'news show-grid' },
-                    '\u6B64\u5904\u663E\u793A\u63D0\u9192\u4FE1\u606F'
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'courier' },
+                    { className: 'modal-dialog modal-sm', role: 'document' },
                     React.createElement(
                         'div',
-                        { className: 'button_wrap show-grid' },
+                        { className: 'modal-content modal_content_padding' },
                         React.createElement(
                             'p',
-                            { className: 'button button-block button-rounded button-primary button-large', onClick: this.handleClick.bind(this, 4) },
-                            React.createElement('img', { src: 'images/dayin.png', alt: '' }),
-                            '\u8BA2\u5355'
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'button_wrap' },
-                        React.createElement(
-                            'p',
-                            { className: 'button button-block button-rounded button-highlight button-large show-grid', onClick: this.handleClick.bind(this, 1) },
-                            React.createElement('img', { src: 'images/zhongtong.png', alt: '' }),
-                            '\u4E2D\u901A'
+                            { className: 'alert_line_two' },
+                            React.createElement(
+                                'span',
+                                { className: 'alert_title' },
+                                '\u5FEB\u9012\u5355\u53F7 :'
+                            ),
+                            React.createElement(
+                                'span',
+                                { className: 'courier_input' },
+                                React.createElement('input', { className: 'print_number logistics_order', type: 'text' })
+                            )
                         ),
                         React.createElement(
                             'p',
-                            { className: 'button button-block button-rounded button-caution button-large show-grid', onClick: this.handleClick.bind(this, 2) },
-                            React.createElement('img', { src: 'images/shentong.png', alt: '' }),
-                            '\u7533\u901A'
+                            { className: 'alert_line_two' },
+                            React.createElement(
+                                'span',
+                                { className: 'alert_title' },
+                                '\u59D3\u540D :'
+                            ),
+                            React.createElement(
+                                'span',
+                                { className: 'courier_input' },
+                                React.createElement('input', { className: 'print_number linkname', type: 'text' })
+                            )
                         ),
                         React.createElement(
                             'p',
-                            { className: 'button button-block button-rounded button-royal button-large', onClick: this.handleClick.bind(this, 3) },
-                            React.createElement('img', { src: 'images/shunfeng.png', alt: '' }),
-                            '\u987A\u98CE'
-                        )
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'alert alert_one' },
-                    React.createElement(
-                        'div',
-                        { className: 'modal-dialog modal-sm', role: 'document' },
+                            { className: 'alert_line_two' },
+                            React.createElement(
+                                'span',
+                                { className: 'alert_title vertical_align_top' },
+                                '\u5730\u5740 :'
+                            ),
+                            React.createElement(
+                                'span',
+                                { className: 'courier_input' },
+                                React.createElement('textarea', { className: 'print_number detail_address textarea_style_alert', type: 'text' })
+                            )
+                        ),
                         React.createElement(
-                            'div',
-                            { className: 'modal-content modal_content_padding' },
+                            'p',
+                            { className: 'alert_line_two' },
                             React.createElement(
-                                'p',
-                                null,
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    this.state.courier
-                                ),
-                                ' \xA0\xA0\xA0\u3000',
-                                React.createElement(
-                                    'span',
-                                    null,
-                                    '\u5171',
-                                    React.createElement(
-                                        'u',
-                                        null,
-                                        this.state.number,
-                                        ' \u5355'
-                                    )
-                                )
+                                'span',
+                                { className: 'alert_title' },
+                                '\u624B\u673A :'
                             ),
                             React.createElement(
-                                'p',
-                                { className: 'alert_line_two' },
-                                '\u8BBE\u7F6E ',
-                                React.createElement(
-                                    'span',
-                                    { className: 'courier_input' },
-                                    React.createElement('input', { className: 'print_number', type: 'text', placeholder: '\u521D\u59CB\u6253\u5370\u5355\u53F7' })
-                                )
-                            ),
-                            React.createElement('hr', null),
+                                'span',
+                                { className: 'courier_input' },
+                                React.createElement('input', { className: 'print_number mobile', type: 'text' })
+                            )
+                        ),
+                        React.createElement('hr', null),
+                        React.createElement(
+                            'p',
+                            { className: 'text_align_center' },
                             React.createElement(
                                 'button',
-                                { className: 'button button-glow button-rounded button-raised button-primary print', onClick: this.handleClick1 },
-                                '\u786E\u8BA4\u6253\u5370'
+                                { className: 'button button-glow button-rounded button-raised button-primary print', onClick: this.handleClick },
+                                '\u4FDD \u5B58'
                             )
                         )
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'courier_wrap_print' },
-                    React.createElement(
-                        'div',
-                        { className: 'courier_print' },
-                        this.state.items.map(function (item) {
-                            return React.createElement(CourierZ, { key: item.id, item: item, courier: _this8.state.courier });
-                        })
                     )
                 )
             );
         }
     }]);
 
-    return Right;
+    return Alert;
 }(React.Component);
 
 ;
-
 // 背景
 
-var Back = function (_React$Component6) {
-    _inherits(Back, _React$Component6);
+var Back = function (_React$Component7) {
+    _inherits(Back, _React$Component7);
 
     function Back(props) {
         _classCallCheck(this, Back);
@@ -22632,8 +22573,6 @@ var Back = function (_React$Component6) {
     _createClass(Back, [{
         key: 'handleClick',
         value: function handleClick(e) {
-            $(".alert_three").hide();
-            $(".alert_two").hide();
             $(".alert_one").hide();
             $(".modal-backdrop").hide();
         }
@@ -22649,282 +22588,6 @@ var Back = function (_React$Component6) {
 
 ;
 
-// 快递模版
-
-var CourierZ = function (_React$Component7) {
-    _inherits(CourierZ, _React$Component7);
-
-    function CourierZ(props) {
-        _classCallCheck(this, CourierZ);
-
-        return _possibleConstructorReturn(this, (CourierZ.__proto__ || Object.getPrototypeOf(CourierZ)).call(this, props));
-    }
-
-    _createClass(CourierZ, [{
-        key: 'render',
-        value: function render() {
-            var courier = this.props.item.logi_name;
-            var style1 = "",
-                style2 = "",
-                style3 = "",
-                style4 = "",
-                style5 = "",
-                style6 = "",
-                style7 = "",
-                style8 = "";
-            var address = "";
-            var courier_name = "";
-            if (courier == "中通") {
-                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
-                style2 = { position: "absolute", top: "60px", left: "0px" };
-                style3 = { position: "absolute", top: "96px", left: "7px" };
-                style4 = { position: "absolute", top: "169px", left: "7px" };
-                style5 = { position: "absolute", top: "60px", left: "318px" };
-                style6 = { position: "absolute", top: "96px", left: "312px", fontSize: "12px" };
-                style7 = { position: "absolute", top: "169px", left: "312px" };
-                style8 = { position: "absolute", top: "280px", left: "107px" };
-                address = "南通市紫琅路2号同道楼3楼";
-                courier_name = "善淘网";
-            } else if (courier == "申通") {
-                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
-                style2 = { position: "absolute", top: "83px", left: "102px" };
-                style3 = { position: "absolute", top: "141px", left: "96px" };
-                style4 = { position: "absolute", top: "163px", left: "21px" };
-                style5 = { position: "absolute", top: "69px", left: "338px" };
-                style6 = { position: "absolute", top: "127px", left: "306px", fontSize: "12px" };
-                style7 = { position: "absolute", top: "161px", left: "360px" };
-                style8 = { position: "absolute", top: "298px", left: "107px" };
-                address = "";
-                courier_name = "";
-            } else if (courier == "顺丰到付") {
-                style1 = { position: "relative", width: "652px", height: "363px", fontFamily: "微软雅黑" };
-                style2 = { position: "absolute", top: "94px", left: "232px" };
-                style3 = { position: "absolute", top: "115px", left: "77px" };
-                style4 = { position: "absolute", top: "152px", left: "137px" };
-                style5 = { position: "absolute", top: "200px", left: "240px" };
-                style6 = { position: "absolute", top: "218px", left: "84px", fontSize: "12px" };
-                style7 = { position: "absolute", top: "254px", left: "137px" };
-                style8 = { position: "absolute", top: "216px", left: "517px" };
-                address = "南通市紫琅路2号同道楼3楼";
-                courier_name = "善淘网";
-            }
-            return React.createElement(
-                'div',
-                { className: 'courier_wrap' },
-                React.createElement(
-                    'div',
-                    { className: 'courier_relative', style: style1 },
-                    React.createElement(
-                        'span',
-                        { className: 'courier_name1', style: style2 },
-                        courier_name
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'courier_address1', style: style3 },
-                        address
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'courier_tel1', style: style4 },
-                        '18112345678'
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'courier_name2', style: style5 },
-                        this.props.item.linkname
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'courier_address2', style: style6 },
-                        this.props.item.to_province,
-                        this.props.item.to_city,
-                        React.createElement('br', null),
-                        this.props.item.detail_address
-                    ),
-                    React.createElement(
-                        'span',
-                        { className: 'courier_tel2', style: style7 },
-                        this.props.item.mobile
-                    ),
-                    React.createElement('span', { className: 'courier_name3', style: style8 })
-                )
-            );
-        }
-    }]);
-
-    return CourierZ;
-}(React.Component);
-
-;
-
-var JianList = function (_React$Component8) {
-    _inherits(JianList, _React$Component8);
-
-    function JianList() {
-        _classCallCheck(this, JianList);
-
-        return _possibleConstructorReturn(this, (JianList.__proto__ || Object.getPrototypeOf(JianList)).apply(this, arguments));
-    }
-
-    _createClass(JianList, [{
-        key: 'render',
-        value: function render() {
-            var style = { width: "1707px" };
-            return React.createElement(
-                'div',
-                { className: 'jianlist_wrap' },
-                React.createElement(
-                    'div',
-                    { className: 'jianlist', style: style },
-                    this.props.tritems.map(function (item, index) {
-                        return React.createElement(JianListUl, { key: item.id, item: item, index: index });
-                    })
-                )
-            );
-        }
-    }]);
-
-    return JianList;
-}(React.Component);
-
-;
-
-var JianListUl = function (_React$Component9) {
-    _inherits(JianListUl, _React$Component9);
-
-    function JianListUl() {
-        _classCallCheck(this, JianListUl);
-
-        return _possibleConstructorReturn(this, (JianListUl.__proto__ || Object.getPrototypeOf(JianListUl)).apply(this, arguments));
-    }
-
-    _createClass(JianListUl, [{
-        key: 'render',
-        value: function render() {
-            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: "659.5px", display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
-            var style2 = { fontSize: "12px", textAlign: "center", width: "10%", overflow: "hidden", listStyle: "none" };
-
-            var style5 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none", textAlign: "center" };
-            var style6 = { fontSize: "12px", width: "20%", overflow: "hidden", listStyle: "none" };
-            var style4 = { width: "50%", overflow: "hidden", listStyle: "none", fontFamily: "微软雅黑" };
-            return React.createElement(
-                'ul',
-                { className: 'jianlist_ul', style: style1 },
-                React.createElement(
-                    'li',
-                    { style: style2 },
-                    '\u5E8F\u53F7:',
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.index + 1
-                    )
-                ),
-                React.createElement(
-                    'li',
-                    { style: style4 },
-                    this.props.item.details.map(function (item, index) {
-                        return React.createElement(JianListLi, { key: item.product_id, item: item, index: index });
-                    })
-                ),
-                React.createElement(
-                    'li',
-                    { style: style5 },
-                    '\u8054\u7CFB\u7535\u8BDD:',
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.item.mobile
-                    )
-                ),
-                React.createElement(
-                    'li',
-                    { style: style6 },
-                    '\u5730\u5740:',
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.item.to_province,
-                        this.props.item.to_city,
-                        this.props.item.detail_address
-                    )
-                )
-            );
-        }
-    }]);
-
-    return JianListUl;
-}(React.Component);
-
-;
-
-var JianListLi = function (_React$Component10) {
-    _inherits(JianListLi, _React$Component10);
-
-    function JianListLi() {
-        _classCallCheck(this, JianListLi);
-
-        return _possibleConstructorReturn(this, (JianListLi.__proto__ || Object.getPrototypeOf(JianListLi)).apply(this, arguments));
-    }
-
-    _createClass(JianListLi, [{
-        key: 'render',
-        value: function render() {
-            var style1 = { fontSize: "12px", float: "left", width: "30%", overflow: "hidden" };
-            var style2 = { fontSize: "12px", float: "left", width: "60%", overflow: "hidden" };
-            var style3 = { fontSize: "12px", float: "left", width: "10%", overflow: "hidden", textAlign: "center" };
-            var style4 = { overflow: "hidden" };
-            var product_id = "";
-            var product_name = "";
-            var number = "";
-            var index = this.props.index;
-            if (index == 0) {
-                var product_id = "商品编号:";
-                var product_name = "商品名称:";
-                var number = "商品数量:";
-            }
-            return React.createElement(
-                'div',
-                { style: style4 },
-                React.createElement(
-                    'div',
-                    { style: style1 },
-                    product_id,
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.item.product_id
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { style: style2 },
-                    product_name,
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.item.product_name
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { style: style3 },
-                    number,
-                    React.createElement(
-                        'p',
-                        null,
-                        this.props.item.number
-                    )
-                )
-            );
-        }
-    }]);
-
-    return JianListLi;
-}(React.Component);
-
-;
 // 返回到页面
 ReactDOM.render(React.createElement(Wrap, null), document.getElementById("content"));
 

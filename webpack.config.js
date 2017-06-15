@@ -15,7 +15,8 @@
 
 module.exports = {
     entry: {
-        index: './app/index.jsx'
+        index: './app/index.jsx',
+        logistics_orders: './app/logistics_orders.jsx'
     },
     output: {
         path: __dirname,
@@ -24,7 +25,7 @@ module.exports = {
     resolve: {
         modules: [__dirname, '../node_modules','components'],
         alias: {
-  
+
         },
         extensions: ['.js','.jsx']
     },

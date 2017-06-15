@@ -109,3 +109,29 @@
 .courier_wrap_print{
     display: none;
 }
+
+th:last-child{
+    text-align: center;
+}
+.alert_title{
+    width: 80px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 55px;
+}
+.text_align_center{
+    text-align: center;
+}
+.alert .text_align_center  button {
+    margin-bottom: 15px;
+    margin-left: 0;
+}
+.textarea_style_alert{
+    min-height: 83px;
+    width: 170px;
+    border: none;
+    outline-style: none;
+}
+.vertical_align_top{
+    vertical-align: top;
+}
