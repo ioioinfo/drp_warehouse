@@ -138,6 +138,7 @@ class Right extends React.Component {
         this.handleClick=this.handleClick.bind(this);
         this.handleClick1=this.handleClick1.bind(this);
         this.handleClick2=this.handleClick2.bind(this);
+        this.handleClick2=this.handleClick3.bind(this);
         this.state={"items":[],"courier":"","number":0};
     }
     handleClick(id){
@@ -228,13 +229,23 @@ class Right extends React.Component {
             }.bind(this)
         });
     }
+
+    handleClick3(e){
+        $(".settings_warp").toggle();
+    }
     render() {
 
 
 
         return (
             <div className="wrapRight col-sm-3 col-sm-offset-1">
-                <div className="news show-grid"><input type="text" className="seeting_height" /><button onClick={this.handleClick2}>保存</button></div>
+                <div className="news show-grid">
+                    <span className="settings_warp">
+                        <input type="text" className="seeting_height" />
+                        <button onClick={this.handleClick2}>保存</button>
+                    </span>
+                    <div className="setting_open" onClick={this.handleClick3}><img src="images/open.png" /></div>
+                </div>
                 <div className="courier">
                     <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large" onClick={this.handleClick.bind(this,4)}><img src="images/dayin.png" alt=""/>订单</p></div>
                     <div className="button_wrap">

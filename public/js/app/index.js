@@ -22428,6 +22428,7 @@ var Right = function (_React$Component5) {
         _this7.handleClick = _this7.handleClick.bind(_this7);
         _this7.handleClick1 = _this7.handleClick1.bind(_this7);
         _this7.handleClick2 = _this7.handleClick2.bind(_this7);
+        _this7.handleClick2 = _this7.handleClick3.bind(_this7);
         _this7.state = { "items": [], "courier": "", "number": 0 };
         return _this7;
     }
@@ -22524,6 +22525,11 @@ var Right = function (_React$Component5) {
             });
         }
     }, {
+        key: 'handleClick3',
+        value: function handleClick3(e) {
+            $(".settings_warp").toggle();
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this8 = this;
@@ -22534,11 +22540,20 @@ var Right = function (_React$Component5) {
                 React.createElement(
                     'div',
                     { className: 'news show-grid' },
-                    React.createElement('input', { type: 'text', className: 'seeting_height' }),
                     React.createElement(
-                        'button',
-                        { onClick: this.handleClick2 },
-                        '\u4FDD\u5B58'
+                        'span',
+                        { className: 'settings_warp' },
+                        React.createElement('input', { type: 'text', className: 'seeting_height' }),
+                        React.createElement(
+                            'button',
+                            { onClick: this.handleClick2 },
+                            '\u4FDD\u5B58'
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'setting_open', onClick: this.handleClick3 },
+                        React.createElement('img', { src: 'images/open.png' })
                     )
                 ),
                 React.createElement(
