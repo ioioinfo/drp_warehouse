@@ -186,6 +186,35 @@ exports.register = function(server, options, next) {
             }
         },
         
+        //保存物流单号
+        {
+            method: 'POST',
+            path: '/modify_logi_no',
+            handler: function(request, reply) {
+                //物流公司
+                var logi_name = request.payload.logi_name;
+                if (!logi_name) {
+                    return reply({"success":false,"message":"param logi_name is null","service_info":service_info});
+                }
+                var logi_no = request.payload.logi_no;
+                if (!logi_no) {
+                    return reply({"success":false,"message":"param logi_no is null","service_info":service_info});
+                }
+                //订单号列表
+                var order_id = request.payload.order_id;
+                if (!order_id) {
+                    return reply({"success":false,"message":"param order_id is null","service_info":service_info});
+                }
+                
+                var url = "http://211.149.248.241:18013/order/modify_logi_no";
+                var data = {"logi_name":logi_name,"logi_no":logi_no,"order_id":order_id};
+                
+                uu_request.do_post_method(url,data,function(err,content) {
+                    return reply({"success":true,"message":"ok"});
+                });
+            }
+        },
+        
     ]);
 
     next();
