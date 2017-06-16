@@ -22428,7 +22428,7 @@ var Right = function (_React$Component5) {
         _this7.handleClick = _this7.handleClick.bind(_this7);
         _this7.handleClick1 = _this7.handleClick1.bind(_this7);
         _this7.handleClick2 = _this7.handleClick2.bind(_this7);
-        _this7.handleClick2 = _this7.handleClick3.bind(_this7);
+        _this7.handleClick3 = _this7.handleClick3.bind(_this7);
         _this7.state = { "items": [], "courier": "", "number": 0 };
         return _this7;
     }
@@ -22551,8 +22551,8 @@ var Right = function (_React$Component5) {
                         )
                     ),
                     React.createElement(
-                        'div',
-                        { className: 'setting_open', onClick: this.handleClick3 },
+                        'span',
+                        { onClick: this.handleClick3, className: 'setting_open' },
                         React.createElement('img', { src: 'images/open.png' })
                     )
                 ),

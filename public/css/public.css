@@ -136,7 +136,6 @@ th:last-child{
     vertical-align: top;
 }
 .settings_warp{
-    display: inline-block;
     display: none;
 }
 .setting_open{

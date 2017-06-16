@@ -138,7 +138,7 @@ class Right extends React.Component {
         this.handleClick=this.handleClick.bind(this);
         this.handleClick1=this.handleClick1.bind(this);
         this.handleClick2=this.handleClick2.bind(this);
-        this.handleClick2=this.handleClick3.bind(this);
+        this.handleClick3=this.handleClick3.bind(this);
         this.state={"items":[],"courier":"","number":0};
     }
     handleClick(id){
@@ -244,7 +244,7 @@ class Right extends React.Component {
                         <input type="text" className="seeting_height" />
                         <button onClick={this.handleClick2}>保存</button>
                     </span>
-                    <div className="setting_open" onClick={this.handleClick3}><img src="images/open.png" /></div>
+                    <span onClick={this.handleClick3} className="setting_open"><img src="images/open.png" /></span>
                 </div>
                 <div className="courier">
                     <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large" onClick={this.handleClick.bind(this,4)}><img src="images/dayin.png" alt=""/>订单</p></div>
