@@ -135,7 +135,10 @@ class Tr extends React.Component {
 class Right extends React.Component {
     constructor(props) {
         super(props);
+        this.handleClick=this.handleClick.bind(this);
         this.handleClick1=this.handleClick1.bind(this);
+        this.handleClick2=this.handleClick2.bind(this);
+        this.handleClick2=this.handleClick3.bind(this);
         this.state={"items":[],"courier":"","number":0};
     }
     handleClick(id){
@@ -202,13 +205,47 @@ class Right extends React.Component {
             });
         }
     }
+
+    handleClick2(e){
+        if(!$(".seeting_height").val()){
+            alert("请输入高度");
+            return;
+        }
+        height_num = $(".seeting_height").val();
+
+        $.ajax({
+            url: "/save_print_setting",
+            dataType: 'json',
+            type: 'POST',
+            data: {"print_type":"picking_orders","settings":JSON.stringify({"height":height_num})},
+            success: function(data) {
+                if (data.success) {
+                    alert("保存成功！");
+                }else {
+                    alert("保存失败！");
+                }
+            }.bind(this),
+            error: function(xhr, status, err) {
+            }.bind(this)
+        });
+    }
+
+    handleClick3(e){
+        $(".settings_warp").toggle();
+    }
     render() {
 
 
 
         return (
             <div className="wrapRight col-sm-3 col-sm-offset-1">
-                <div className="news show-grid">此处显示提醒信息</div>
+                <div className="news show-grid">
+                    <span className="settings_warp">
+                        <input type="text" className="seeting_height" />
+                        <button onClick={this.handleClick2}>保存</button>
+                    </span>
+                    <div className="setting_open" onClick={this.handleClick3}><img src="images/open.png" /></div>
+                </div>
                 <div className="courier">
                     <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large" onClick={this.handleClick.bind(this,4)}><img src="images/dayin.png" alt=""/>订单</p></div>
                     <div className="button_wrap">
@@ -322,6 +359,28 @@ class CourierZ extends React.Component {
 };
 
 class JianList extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    componentDidMount(){
+        $.ajax({
+            url: "/get_print_setting?print_type=picking_orders",
+            dataType: 'json',
+            type: 'GET',
+            success: function(data) {
+                if(data.row && data.row.settings){
+                    height_num = data.row.settings.height;
+                    if (!height_num) {
+                        height_num = "650px";
+                    }
+                    $(".seeting_height").val(height_num);
+                }
+            }.bind(this),
+            error: function(xhr, status, err) {
+            }.bind(this)
+        });
+    }
+
     render() {
         var style = {width:"1707px"}
         return (
@@ -337,7 +396,8 @@ class JianList extends React.Component {
 };
 class JianListUl extends React.Component {
     render() {
-        var style1 = {width:"100%",margin:"0",padding:"9px 0 0 0",  height:"659.5px",display:"flex",overflow:"hidden",fontFamily:"微软雅黑"};
+        var height = this.props.height;
+        var style1 = {width:"100%",margin:"0",padding:"9px 0 0 0",  height:height_num,display:"flex",overflow:"hidden",fontFamily:"微软雅黑"};
         var style2 = {fontSize:"12px",textAlign:"center",width:"10%",overflow:"hidden",listStyle:"none"};
 
         var style5 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none",textAlign:"center"};
