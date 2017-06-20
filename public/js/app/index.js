@@ -22867,8 +22867,7 @@ var JianListUl = function (_React$Component9) {
     _createClass(JianListUl, [{
         key: 'render',
         value: function render() {
-            var height = this.props.height;
-            var style1 = { width: "100%", margin: "0", padding: "9px 0 0 0", height: height_num, display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
+            var style1 = { width: "65%", margin: "0", padding: "29px 0 0 0", height: height_num, display: "flex", overflow: "hidden", fontFamily: "微软雅黑" };
             var style2 = { fontSize: "16px", textAlign: "center", width: "10%", overflow: "hidden", listStyle: "none" };
 
             var style5 = { fontSize: "16px", width: "20%", overflow: "hidden", listStyle: "none", textAlign: "center" };
