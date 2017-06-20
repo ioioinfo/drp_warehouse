@@ -166,6 +166,8 @@ class Alert extends React.Component {
             success: function(data) {
                 if (data.success) {
                     alert("保存成功！");
+                    $(".alert_one").hide();
+                    $(".modal-backdrop").hide();
                 }else {
                     alert("保存失败！");
                 }
@@ -175,8 +177,7 @@ class Alert extends React.Component {
         });
 
 
-        $(".alert_one").hide();
-        $(".modal-backdrop").hide();
+
     }
     render() {
         var style = {"left":"34%"};

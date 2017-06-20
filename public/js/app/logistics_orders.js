@@ -22478,15 +22478,14 @@ var Alert = function (_React$Component6) {
                 success: function (data) {
                     if (data.success) {
                         alert("保存成功！");
+                        $(".alert_one").hide();
+                        $(".modal-backdrop").hide();
                     } else {
                         alert("保存失败！");
                     }
                 }.bind(this),
                 error: function (xhr, status, err) {}.bind(this)
             });
-
-            $(".alert_one").hide();
-            $(".modal-backdrop").hide();
         }
     }, {
         key: 'render',
