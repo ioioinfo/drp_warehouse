@@ -187,7 +187,7 @@ class Right extends React.Component {
             for (var i = 0; i < items.length; i++) {
                 order_ids.push(items[i].order_id);
             }
-            print_method($(".courier_wrap_print").html());
+
             $.ajax({
                 url: "/batch_set_logi_no",
                 dataType: 'json',
@@ -195,9 +195,9 @@ class Right extends React.Component {
                 data: {"logi_name":logi_name,"begin_no":begin_no,"order_ids":JSON.stringify(order_ids)},
                 success: function(data) {
                     if (data.success) {
-                        alert("保存成功！");
+                        print_method($(".courier_wrap_print").html());
                     }else {
-                        alert("保存失败！");
+                        alert("发货失败！");
                     }
                 }.bind(this),
                 error: function(xhr, status, err) {
@@ -347,7 +347,7 @@ class CourierZ extends React.Component {
                 <div className="courier_relative" style={style1}>
                     <span className="courier_name1" style={style2}>{courier_name}</span>
                     <span className="courier_address1" style={style3}>{address}</span>
-                    <span className="courier_tel1" style={style4}>18112345678</span>
+                    <span className="courier_tel1" style={style4}>0513-81188090</span>
                     <span className="courier_name2" style={style5}>{this.props.item.linkname}</span>
                     <span className="courier_address2" style={style6}>{this.props.item.to_province}{this.props.item.to_city}<br/>{this.props.item.detail_address}</span>
                     <span className="courier_tel2" style={style7}>{this.props.item.mobile}</span>

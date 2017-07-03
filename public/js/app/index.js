@@ -22483,7 +22483,7 @@ var Right = function (_React$Component5) {
                 for (var i = 0; i < items.length; i++) {
                     order_ids.push(items[i].order_id);
                 }
-                print_method($(".courier_wrap_print").html());
+
                 $.ajax({
                     url: "/batch_set_logi_no",
                     dataType: 'json',
@@ -22491,9 +22491,9 @@ var Right = function (_React$Component5) {
                     data: { "logi_name": logi_name, "begin_no": begin_no, "order_ids": JSON.stringify(order_ids) },
                     success: function (data) {
                         if (data.success) {
-                            alert("保存成功！");
+                            print_method($(".courier_wrap_print").html());
                         } else {
-                            alert("保存失败！");
+                            alert("发货失败！");
                         }
                     }.bind(this),
                     error: function (xhr, status, err) {}.bind(this)
@@ -22773,7 +22773,7 @@ var CourierZ = function (_React$Component7) {
                     React.createElement(
                         'span',
                         { className: 'courier_tel1', style: style4 },
-                        '18112345678'
+                        '0513-81188090'
                     ),
                     React.createElement(
                         'span',
