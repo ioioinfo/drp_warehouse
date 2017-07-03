@@ -181,7 +181,7 @@ exports.register = function(server, options, next) {
                 var data = {"logi_name":logi_name,"begin_no":begin_no,"order_ids":order_ids};
                 
                 uu_request.do_post_method(url,data,function(err,content) {
-                    return reply({"success":true,"message":"ok"});
+                    return reply({"success":content.success,"message":content.message});
                 });
             }
         },
@@ -210,7 +210,7 @@ exports.register = function(server, options, next) {
                 var data = {"logi_name":logi_name,"logi_no":logi_no,"order_id":order_id};
                 
                 uu_request.do_post_method(url,data,function(err,content) {
-                    return reply({"success":true,"message":"ok"});
+                    return reply({"success":content.success,"message":content.message});
                 });
             }
         },
