@@ -63,8 +63,14 @@ exports.register = function(server, options, next) {
                             
                             var rows = [];
                             _.each(logistics_orders,function(logistics_order) {
-                                var row = _.merge(logistics_order,m_ec_order[logistics_order.order_id]);
-                                row.product_count = m_ec_order[logistics_order.order_id].details.length;
+                                var order = m_ec_order[logistics_order.order_id];
+                                var row = _.merge(logistics_order,order);
+                                if (order && order.details) {
+                                    row.product_count = order.details.length;
+                                } else {
+                                    row.product_count = 0;
+                                }
+                                
                                 row.address = row.to_province+row.to_city+row.to_district;
                                 
                                 //补充产品信息
