@@ -22410,13 +22410,17 @@ var Td = function (_React$Component5) {
         value: function handleClick(e) {
             event.stopPropagation();
             var tarid = e.target.id;
+
             var dataid = $("#" + tarid).data("id");
+            order_id = orders_map[dataid].order_id;
             var linkname = orders_map[dataid].linkname;
             var mobile = orders_map[dataid].mobile;
+            var logi_name = orders_map[dataid].logi_name;
             var address = orders_map[dataid].to_province + orders_map[dataid].to_city + orders_map[dataid].to_district + orders_map[dataid].detail_address;
             $(".linkname").val(linkname);
             $(".mobile").val(mobile);
             $(".detail_address").val(address);
+            $(".logistics_name").val(logi_name);
             $(".alert_one").show();
             $(".modal-backdrop").show();
         }
@@ -22464,13 +22468,30 @@ var Alert = function (_React$Component6) {
     _createClass(Alert, [{
         key: 'handleClick',
         value: function handleClick(e) {
-            $(".alert_one").hide();
-            $(".modal-backdrop").hide();
+            var logi_name = $(".logistics_name").val();
+            var logi_no = $(".logistics_order").val();
+            $.ajax({
+                url: "/modify_logi_no",
+                dataType: 'json',
+                type: 'POST',
+                data: { "logi_name": logi_name, "order_id": order_id, "logi_no": logi_no },
+                success: function (data) {
+                    if (data.success) {
+                        alert("保存成功！");
+                        $(".alert_one").hide();
+                        $(".modal-backdrop").hide();
+                    } else {
+                        alert("保存失败！");
+                    }
+                }.bind(this),
+                error: function (xhr, status, err) {}.bind(this)
+            });
         }
     }, {
         key: 'render',
         value: function render() {
             var style = { "left": "34%" };
+
             return React.createElement(
                 'div',
                 { className: 'alert alert_one', style: style },
@@ -22480,6 +22501,20 @@ var Alert = function (_React$Component6) {
                     React.createElement(
                         'div',
                         { className: 'modal-content modal_content_padding' },
+                        React.createElement(
+                            'p',
+                            { className: 'alert_line_two' },
+                            React.createElement(
+                                'span',
+                                { className: 'alert_title' },
+                                '\u5FEB\u9012\u516C\u53F8 :'
+                            ),
+                            React.createElement(
+                                'span',
+                                { className: 'courier_input' },
+                                React.createElement('input', { className: 'print_number logistics_name', type: 'text' })
+                            )
+                        ),
                         React.createElement(
                             'p',
                             { className: 'alert_line_two' },

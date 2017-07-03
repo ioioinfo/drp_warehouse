@@ -29,3 +29,6 @@
     left: 0;
     z-index: 900;
 }
+.overflow{
+    overflow: hidden;
+}

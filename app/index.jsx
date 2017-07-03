@@ -138,7 +138,7 @@ class Right extends React.Component {
         this.handleClick=this.handleClick.bind(this);
         this.handleClick1=this.handleClick1.bind(this);
         this.handleClick2=this.handleClick2.bind(this);
-        this.handleClick2=this.handleClick3.bind(this);
+        this.handleClick3=this.handleClick3.bind(this);
         this.state={"items":[],"courier":"","number":0};
     }
     handleClick(id){
@@ -244,7 +244,7 @@ class Right extends React.Component {
                         <input type="text" className="seeting_height" />
                         <button onClick={this.handleClick2}>保存</button>
                     </span>
-                    <div className="setting_open" onClick={this.handleClick3}><img src="images/open.png" /></div>
+                    <span onClick={this.handleClick3} className="setting_open"><img src="images/open.png" /></span>
                 </div>
                 <div className="courier">
                     <div className="button_wrap show-grid"><p className="button button-block button-rounded button-primary button-large" onClick={this.handleClick.bind(this,4)}><img src="images/dayin.png" alt=""/>订单</p></div>
@@ -396,12 +396,11 @@ class JianList extends React.Component {
 };
 class JianListUl extends React.Component {
     render() {
-        var height = this.props.height;
-        var style1 = {width:"100%",margin:"0",padding:"9px 0 0 0",  height:height_num,display:"flex",overflow:"hidden",fontFamily:"微软雅黑"};
-        var style2 = {fontSize:"12px",textAlign:"center",width:"10%",overflow:"hidden",listStyle:"none"};
+        var style1 = {width:"65%",margin:"0",padding:"29px 0 0 0",  height:height_num,display:"flex",overflow:"hidden",fontFamily:"微软雅黑"};
+        var style2 = {fontSize:"16px",textAlign:"center",width:"10%",overflow:"hidden",listStyle:"none"};
 
-        var style5 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none",textAlign:"center"};
-        var style6 = {fontSize:"12px",width:"20%",overflow:"hidden",listStyle:"none"};
+        var style5 = {fontSize:"16px",width:"20%",overflow:"hidden",listStyle:"none",textAlign:"center"};
+        var style6 = {fontSize:"16px",width:"20%",overflow:"hidden",listStyle:"none"};
         var style4 = {width:"50%",overflow:"hidden",listStyle:"none",fontFamily:"微软雅黑"};
         return (
             <ul className="jianlist_ul" style={style1}>
@@ -421,9 +420,9 @@ class JianListUl extends React.Component {
 };
 class JianListLi extends React.Component {
     render() {
-        var style1 = {fontSize:"12px",float:"left",width:"30%",overflow:"hidden"};
-        var style2 = {fontSize:"12px",float:"left",width:"60%",overflow:"hidden"};
-        var style3 = {fontSize:"12px",float:"left",width:"10%",overflow:"hidden",textAlign:"center"};
+        var style1 = {fontSize:"16px",float:"left",width:"30%",overflow:"hidden"};
+        var style2 = {fontSize:"16px",float:"left",width:"60%",overflow:"hidden"};
+        var style3 = {fontSize:"16px",float:"left",width:"10%",overflow:"hidden",textAlign:"center"};
         var style4 = {overflow:"hidden"};
         var product_id = "";
         var product_name = "";
