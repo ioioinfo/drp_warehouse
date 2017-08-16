@@ -71,6 +71,7 @@ class Wrap extends React.Component {
             <WrapRightHead />
             </div>
             </nav>
+            <div className="warehouse_pageNav_line">|<a href="logistics_orders" className="warehouse_pageNav">未发货查看</a></div>
             <div className="container-fluid margin_top88">
             <div className="row">
             <Left thitems={this.state.thitems} tritems={this.state.tritems}  />

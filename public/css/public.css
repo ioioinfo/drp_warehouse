@@ -1,6 +1,19 @@
-.margin_top88{
-    margin-top: 88px;
+.wrap{
+  overflow: hidden;
 }
+.warehouse_pageNav_line{
+  margin-top: 60px;
+  margin-bottom: 7px;
+  background: #f8f8f8;
+  text-align: right;
+  padding: 5px;
+}
+.warehouse_pageNav{
+  color: #333;
+  font-size: 12px;
+  display: inline-block;margin-left: 7px;
+}
+
 .news{
     width: 100%;
     line-height: 50px;
