@@ -71,7 +71,7 @@ class Left extends React.Component {
     render() {
         return (
             <div className="wrapLeft col-sm-12">
-                <div className="table-responsive">
+                <div className="table-responsive" id="table_height">
                     <table className="table table-bordered table-hover">
                         <thead>
                         <tr>

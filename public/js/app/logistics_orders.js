@@ -22684,7 +22684,7 @@ var Left = function (_React$Component2) {
                 { className: 'wrapLeft col-sm-12' },
                 React.createElement(
                     'div',
-                    { className: 'table-responsive' },
+                    { className: 'table-responsive', id: 'table_height' },
                     React.createElement(
                         'table',
                         { className: 'table table-bordered table-hover' },
